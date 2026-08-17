@@ -98,4 +98,4 @@ resource "aws_s3_bucket_versioning" "lab_bucket_versioning" {
   versioning_configuration {
     status = "Enabled"
   }
-}
+}# test line
