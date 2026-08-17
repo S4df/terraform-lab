@@ -85,3 +85,17 @@ resource "aws_s3_bucket" "lab_bucket" {
 output "s3_bucket_name" {
   value = aws_s3_bucket.lab_bucket.bucket
 }
+# ============================================================
+# RESOURCE: S3 bucket versioning
+# ============================================================
+# Versioning keeps every past version of an object when it's
+# overwritten or deleted, instead of losing the old copy forever.
+# Analogy: like keeping point-in-time recovery for a database —
+# without it, an accidental overwrite or delete is unrecoverable.
+resource "aws_s3_bucket_versioning" "lab_bucket_versioning" {
+  bucket = aws_s3_bucket.lab_bucket.id
+
+  versioning_configuration {
+    status = "Enabled"
+  }
+}
