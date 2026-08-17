@@ -99,3 +99,31 @@ resource "aws_s3_bucket_versioning" "lab_bucket_versioning" {
     status = "Enabled"
   }
 }
+# ============================================================
+# DATA SOURCE: latest Amazon Linux AMI
+# ============================================================
+data "aws_ami" "amazon_linux" {
+  most_recent = true
+  owners      = ["amazon"]
+
+  filter {
+    name   = "name"
+    values = ["al2023-ami-*-x86_64"]
+  }
+}
+
+# ============================================================
+# RESOURCE: EC2 instance
+# ============================================================
+resource "aws_instance" "lab_server" {
+  ami           = data.aws_ami.amazon_linux.id
+  instance_type = "t2.micro"
+
+  tags = {
+    Name = "terraform-lab-instance"
+  }
+}
+
+output "aws_instance_public_ip" {
+  value = aws_instance.lab_server.public_ip
+}
