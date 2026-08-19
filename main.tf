@@ -98,4 +98,37 @@ resource "aws_s3_bucket_versioning" "lab_bucket_versioning" {
   versioning_configuration {
     status = "Enabled"
   }
-}# test line
+# ============================================================
+# RESOURCE: RDS SQL Server instance (free-tier lab)
+# ============================================================
+resource "aws_db_instance" "sql_lab" {
+  identifier           = "dbre-lab-sqlserver"
+  engine               = "sqlserver-ex"
+  engine_version       = "15.00.4430.1.v1"
+  instance_class       = "db.t3.micro"
+  allocated_storage    = 20
+  storage_type         = "gp2"
+
+  license_model        = "license-included"
+  multi_az             = false
+
+  username             = "admin"
+  password             = var.db_password
+
+  publicly_accessible  = true
+  skip_final_snapshot  = true
+
+  tags = {
+    Name = "dbre-lab-sqlserver"
+  }
+}
+
+variable "db_password" {
+  description = "Master password for the SQL Server RDS instance"
+  type        = string
+  sensitive   = true
+}
+
+output "rds_endpoint" {
+  value = aws_db_instance.sql_lab.endpoint
+}
